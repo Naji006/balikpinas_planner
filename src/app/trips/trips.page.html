@@ -1,0 +1,41 @@
+<ion-content [fullscreen]="true" class="planner-content">
+  <header class="planner-topbar">
+    <a class="back-control" routerLink="/tabs/home" aria-label="Back to Home"><ion-icon name="chevron-forward-outline" style="transform: rotate(180deg)"></ion-icon></a>
+    <span>Travel Planner</span>
+  </header>
+  <main class="planner-shell">
+    <div class="page-heading">
+      <div><p class="section-kicker">YOUR JOURNEYS</p><h1>My Trips</h1><p>Plan the days, details, and little moments.</p></div>
+      <button class="planner-button" type="button" (click)="showTripForm = !showTripForm"><ion-icon name="add-outline"></ion-icon>New trip</button>
+    </div>
+
+    <form *ngIf="showTripForm" #tripForm="ngForm" class="planner-card form-card" (ngSubmit)="addTrip()">
+      <h2>Plan a trip</h2>
+      <div class="form-fields">
+        <ion-input label="Destination" label-placement="stacked" name="destination" [(ngModel)]="newTrip.destination" required></ion-input>
+        <ion-input label="Departure" label-placement="stacked" type="date" name="startDate" [(ngModel)]="newTrip.startDate" required></ion-input>
+        <ion-input label="Return" label-placement="stacked" type="date" name="endDate" [(ngModel)]="newTrip.endDate" required></ion-input>
+      </div>
+      <div class="row-end">
+        <button class="planner-button secondary" type="button" (click)="showTripForm = false">Cancel</button>
+        <button class="planner-button" type="submit" [disabled]="tripForm.invalid">Save trip</button>
+      </div>
+    </form>
+
+    <div class="data-list">
+      <article class="planner-card trip-plan" *ngFor="let trip of trips">
+        <button class="trip-main" type="button" (click)="openDetails()">
+          <span class="row-icon"><ion-icon name="airplane-outline"></ion-icon></span>
+          <span class="trip-copy">
+            <span class="badge">{{ trip.flight }}</span>
+            <strong>{{ trip.destination }}</strong>
+            <span><ion-icon name="calendar-outline"></ion-icon> {{ trip.startDate }} — {{ trip.endDate }}</span>
+          </span>
+          <ion-icon class="trip-arrow" name="chevron-forward-outline"></ion-icon>
+        </button>
+        <button class="icon-control trip-delete" type="button" aria-label="Delete trip" (click)="removeTrip(trip.id)"><ion-icon name="trash-outline"></ion-icon></button>
+      </article>
+      <div *ngIf="trips.length === 0" class="planner-card empty-state"><ion-icon name="location-outline"></ion-icon><h2>Your next trip starts here</h2><p>Add a destination to build your travel plan.</p></div>
+    </div>
+  </main>
+</ion-content>

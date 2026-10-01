@@ -1,0 +1,328 @@
+<ion-content [fullscreen]="true" class="home-content">
+
+  <!-- TOP HEADER -->
+  <div class="top-header">
+
+    <button class="menu-button" (click)="toggleMenu()">
+      <ion-icon name="menu-outline"></ion-icon>
+    </button>
+
+    <div class="app-title">
+      BalikPinas Planner
+    </div>
+
+    <button class="notification-button">
+      <ion-icon name="notifications-outline"></ion-icon>
+    </button>
+
+  </div>
+
+
+  <!-- HERO SECTION -->
+  <section class="hero-section">
+
+    <div class="welcome-text">
+      <p class="good-day">Good day,</p>
+
+      <h1>{{ currentUser.fullName }}!</h1>
+
+      <p class="quote">Home is always a good idea.</p>
+    </div>
+
+  </section>
+
+
+  <!-- UPCOMING TRIP -->
+  <section class="content-section">
+
+    <div
+      class="trip-card"
+      (click)="openPage('/trip-details')"
+    >
+
+      <div class="trip-icon">
+        <ion-icon name="airplane-outline"></ion-icon>
+      </div>
+
+      <div class="trip-information">
+
+        <p class="card-label">
+          Upcoming Trip
+        </p>
+
+        <h2>
+          Manila, Philippines
+        </h2>
+
+        <p class="trip-date">
+          December 20, 2026 - January 10, 2027
+        </p>
+
+      </div>
+
+      <ion-icon
+        class="arrow-icon"
+        name="chevron-forward-outline">
+      </ion-icon>
+
+    </div>
+
+
+    <!-- WEATHER + BUDGET -->
+    <div class="overview-grid">
+
+      <div
+        class="overview-card"
+        (click)="openPage('/weather')"
+      >
+
+        <p class="overview-title">
+          Weather in Manila
+        </p>
+
+        <div class="overview-content">
+
+          <ion-icon
+            class="weather-icon"
+            name="sunny-outline">
+          </ion-icon>
+
+          <div>
+            <h3>32°C</h3>
+            <p>Mostly Sunny</p>
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div
+        class="overview-card"
+        (click)="openPage('/budget')"
+      >
+
+        <p class="overview-title">
+          Budget Overview
+        </p>
+
+        <div class="overview-content">
+
+          <ion-icon
+            class="budget-icon"
+            name="wallet-outline">
+          </ion-icon>
+
+          <div>
+            <h3>₱50,000</h3>
+            <p>Planned</p>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- QUICK ACTIONS -->
+    <h2 class="section-title">
+      Quick Actions
+    </h2>
+
+    <div class="quick-actions">
+
+      <button
+        class="action-button blue"
+        (click)="openPage('/trips')"
+      >
+
+        <span class="action-icon">
+          <ion-icon name="airplane-outline"></ion-icon>
+        </span>
+
+        <span>
+          My Trips
+        </span>
+
+      </button>
+
+
+      <button
+        class="action-button green"
+        (click)="openPage('/documents')"
+      >
+
+        <span class="action-icon">
+          <ion-icon name="document-text-outline"></ion-icon>
+        </span>
+
+        <span>
+          Documents
+        </span>
+
+      </button>
+
+
+      <button
+        class="action-button orange"
+        (click)="openPage('/checklist')"
+      >
+
+        <span class="action-icon">
+          <ion-icon name="list-outline"></ion-icon>
+        </span>
+
+        <span>
+          Checklist
+        </span>
+
+      </button>
+
+
+      <button
+        class="action-button red"
+        (click)="openPage('/budget')"
+      >
+
+        <span class="action-icon">
+          <ion-icon name="wallet-outline"></ion-icon>
+        </span>
+
+        <span>
+          Budget
+        </span>
+
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- SIDE MENU OVERLAY -->
+  @if (menuOpen) {
+    <div class="menu-overlay" (click)="toggleMenu()"></div>
+  }
+
+
+  <!-- SIDE MENU -->
+  <aside
+    class="side-menu"
+    [class.open]="menuOpen"
+  >
+
+    <div class="profile-section">
+
+      <div class="profile-avatar">
+        👤
+      </div>
+
+      <div>
+        <h2>{{ currentUser.fullName }}</h2>
+        <p>{{ currentUser.email }}</p>
+      </div>
+
+      <button
+        class="close-button"
+        (click)="toggleMenu()"
+      >
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+
+    </div>
+
+
+    <div class="menu-items">
+
+      <button
+        class="menu-item active"
+        (click)="openPage('/home')"
+      >
+        <ion-icon name="home-outline"></ion-icon>
+        <span>Home</span>
+      </button>
+
+
+      <button
+        class="menu-item"
+        (click)="openPage('/trips')"
+      >
+        <ion-icon name="airplane-outline"></ion-icon>
+        <span>My Trips</span>
+      </button>
+
+
+      <button
+        class="menu-item"
+        (click)="openPage('/documents')"
+      >
+        <ion-icon name="document-text-outline"></ion-icon>
+        <span>Documents</span>
+      </button>
+
+
+      <button
+        class="menu-item"
+        (click)="openPage('/budget')"
+      >
+        <ion-icon name="wallet-outline"></ion-icon>
+        <span>Budget</span>
+      </button>
+
+
+      <button
+        class="menu-item"
+        (click)="openPage('/weather')"
+      >
+        <ion-icon name="sunny-outline"></ion-icon>
+        <span>Weather</span>
+      </button>
+
+
+      <button
+        class="menu-item"
+        (click)="openPage('/checklist')"
+      >
+        <ion-icon name="list-outline"></ion-icon>
+        <span>Checklist</span>
+      </button>
+
+      <button class="menu-item" (click)="openPage('/contacts')">
+        <ion-icon name="people-outline"></ion-icon>
+        <span>Family Contacts</span>
+      </button>
+
+    </div>
+
+
+    <div class="menu-bottom">
+
+      <button
+        class="menu-item"
+        (click)="openPage('/profile')"
+      >
+        <span class="menu-symbol">👤</span>
+        <span>Profile</span>
+      </button>
+
+
+      <button
+        class="menu-item"
+        (click)="openPage('/settings')"
+      >
+        <span class="menu-symbol">⚙️</span>
+        <span>Settings</span>
+      </button>
+
+
+      <button class="menu-item logout" (click)="openPage('/login')">
+        <span class="menu-symbol">↪</span>
+        <span>Logout</span>
+      </button>
+
+    </div>
+
+  </aside>
+
+</ion-content>

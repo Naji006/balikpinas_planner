@@ -1,0 +1,29 @@
+<ion-content [fullscreen]="true" class="planner-content">
+  <header class="planner-topbar"><a class="back-control" routerLink="/tabs/home" aria-label="Back to Home"><ion-icon name="arrow-back-outline"></ion-icon></a><span>Profile & Activity</span></header>
+  <main class="planner-shell profile-shell">
+    <section class="planner-card profile-card">
+      <div class="profile-avatar"><ion-icon name="person-circle-outline"></ion-icon></div>
+      <div><p class="section-kicker">TRAVELER</p><h1>{{ currentUser.fullName }}</h1><p>{{ currentUser.email }}</p></div>
+    </section>
+    <section class="activity-section">
+      <div class="page-heading"><div><p class="section-kicker">LOCAL DATABASE</p><h2>Recent activity</h2><p>Events saved on this browser.</p></div><ion-icon name="time-outline"></ion-icon></div>
+      @if (loadingHistory) {
+        <div class="planner-card empty-state">Loading activity…</div>
+      } @else if (historyError) {
+        <div class="planner-card empty-state"><h2>Activity unavailable</h2><p>Browser storage could not be opened.</p></div>
+      } @else if (transactions.length === 0) {
+        <div class="planner-card empty-state"><h2>No activity recorded</h2><p>Successful sign-ins and planner changes will appear here.</p></div>
+      } @else {
+        <div class="data-list">
+          @for (transaction of transactions; track transaction.id) {
+            <article class="planner-card data-row activity-row">
+              <span class="row-icon"><ion-icon [name]="transaction.action === 'login' ? 'person-circle-outline' : 'time-outline'"></ion-icon></span>
+              <div class="row-main"><h3>{{ transaction.description }}</h3><p>{{ transaction.email || 'Planner activity' }}</p><p>{{ transaction.createdAt | date:'medium' }}</p></div>
+              @if (transaction.amount !== undefined) { <span class="badge">₱{{ transaction.amount | number:'1.0-0' }}</span> }
+            </article>
+          }
+        </div>
+      }
+    </section>
+  </main>
+</ion-content>

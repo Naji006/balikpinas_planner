@@ -1,0 +1,47 @@
+<ion-content [fullscreen]="true" class="auth-content">
+  <main class="auth-page login-page">
+    <section class="brand-lockup" aria-label="BalikPinas Planner">
+      <div class="brand-mark"><ion-icon name="airplane-outline"></ion-icon></div>
+      <p class="brand-name">BalikPinas</p>
+      <p class="brand-caption">P L A N N E R</p>
+      <p class="brand-tagline">Your Homecoming, Our Priority</p>
+    </section>
+
+    <section class="auth-panel" aria-labelledby="login-title">
+      <header class="auth-heading">
+        <h1 id="login-title">Welcome Back!</h1>
+        <p>Log in to continue your journey.</p>
+      </header>
+      @if (registrationComplete) {
+        <p class="form-success" role="status">Account created. Sign in to continue.</p>
+      }
+      <form #loginForm="ngForm" class="auth-form">
+        <label class="input-row">
+          <ion-icon name="mail-outline" aria-hidden="true"></ion-icon>
+          <ion-input label="Email Address" label-placement="stacked" type="email" name="email" autocomplete="email" [(ngModel)]="email" required email></ion-input>
+        </label>
+        <label class="input-row">
+          <ion-icon name="lock-closed-outline" aria-hidden="true"></ion-icon>
+          <ion-input label="Password" label-placement="stacked" [type]="passwordVisible ? 'text' : 'password'" name="password" autocomplete="current-password" [(ngModel)]="password" required></ion-input>
+          <button class="visibility-button" type="button" [attr.aria-label]="passwordVisible ? 'Hide password' : 'Show password'" (click)="passwordVisible = !passwordVisible">
+            <ion-icon [name]="passwordVisible ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+          </button>
+        </label>
+        <div class="form-options">
+          <label class="remember-option">
+            <ion-checkbox name="rememberMe" [(ngModel)]="rememberMe"></ion-checkbox>
+            <span>Remember me</span>
+          </label>
+          <span class="text-link">Forgot Password?</span>
+        </div>
+        @if (loginError) {
+          <p class="form-error" role="alert">{{ loginError }}</p>
+        }
+        <ion-button class="primary-action" expand="block" type="button" [disabled]="loginForm.invalid" (click)="login()">Log In</ion-button>
+      </form>
+      <div class="divider"><span>or</span></div>
+      <button class="google-action" type="button" disabled><span class="google-mark">G</span>Continue with Google</button>
+      <p class="auth-switch">Don’t have an account? <a routerLink="/register">Register</a></p>
+    </section>
+  </main>
+</ion-content>

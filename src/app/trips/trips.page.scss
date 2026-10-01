@@ -1,0 +1,7 @@
+.trip-plan { display: flex; align-items: center; gap: 8px; padding: 8px 10px 8px 14px; }
+.trip-main { display: flex; min-width: 0; flex: 1; align-items: center; gap: 13px; padding: 8px 0; border: 0; background: transparent; color: inherit; text-align: left; }
+.trip-copy { display: grid; min-width: 0; flex: 1; gap: 5px; }
+.trip-copy strong { overflow: hidden; color: #203b56; font-size: 15px; text-overflow: ellipsis; white-space: nowrap; }
+.trip-copy > span:last-of-type { display: flex; align-items: center; gap: 4px; color: #768596; font-size: 11px; }
+.trip-arrow { color: #7b8997; }
+.trip-delete { color: #9a5960; }

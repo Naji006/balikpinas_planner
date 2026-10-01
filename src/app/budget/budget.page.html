@@ -1,0 +1,30 @@
+<ion-content [fullscreen]="true" class="planner-content">
+  <header class="planner-topbar"><a class="back-control" routerLink="/tabs/home" aria-label="Back to Home"><ion-icon name="chevron-forward-outline" style="transform: rotate(180deg)"></ion-icon></a><span>Budget Planner</span></header>
+  <main class="planner-shell">
+    <div class="page-heading"><div><p class="section-kicker">TRIP COSTS</p><h1>Budget Planner</h1><p>Track what you plan and what you spend.</p></div><button class="planner-button" type="button" (click)="showForm = !showForm"><ion-icon name="add-outline"></ion-icon>Add item</button></div>
+
+    <section class="planner-card budget-overview">
+      <div><p>Planned budget</p><strong>{{ formatPeso(plannedTotal) }}</strong></div>
+      <div><p>Spent so far</p><strong>{{ formatPeso(spentTotal) }}</strong></div>
+      <div class="budget-track"><span [style.width.%]="plannedTotal ? spentTotal / plannedTotal * 100 : 0"></span></div>
+      <small>{{ formatPeso(plannedTotal - spentTotal) }} remaining</small>
+    </section>
+
+    <form *ngIf="showForm" #budgetForm="ngForm" class="planner-card form-card" (ngSubmit)="addLine()">
+      <h2>Add a budget item</h2>
+      <div class="form-fields"><ion-input label="Category" label-placement="stacked" name="name" [(ngModel)]="draft.name" required></ion-input><ion-input label="Planned amount (₱)" label-placement="stacked" type="number" name="planned" min="1" [(ngModel)]="draft.planned" required></ion-input></div>
+      <button class="planner-button" type="submit" [disabled]="budgetForm.invalid">Add to budget</button>
+    </form>
+
+    <div class="budget-list-heading"><h2>Categories</h2><span>Planned · Spent</span></div>
+    <section class="budget-lines">
+      <article class="planner-card budget-line" *ngFor="let line of lines">
+        <span class="row-icon"><ion-icon name="wallet-outline"></ion-icon></span>
+        <div class="budget-line-main"><strong>{{ line.name }}</strong><div class="budget-track"><span [style.width.%]="line.planned ? line.spent / line.planned * 100 : 0"></span></div></div>
+        <div class="budget-numbers"><b>{{ formatPeso(line.planned) }}</b><label>Spent <ion-input aria-label="Spent amount" type="number" min="0" [max]="line.planned" name="spent-{{ line.id }}" [(ngModel)]="line.spent" (ionChange)="saveSpent(line)"></ion-input></label></div>
+        <button class="icon-control" type="button" aria-label="Remove category" (click)="removeLine(line.id)"><ion-icon name="trash-outline"></ion-icon></button>
+      </article>
+      <div *ngIf="lines.length === 0" class="planner-card empty-state"><ion-icon name="wallet-outline"></ion-icon><h2>No budget items</h2><p>Add your first category to start tracking.</p></div>
+    </section>
+  </main>
+</ion-content>

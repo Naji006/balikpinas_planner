@@ -1,0 +1,28 @@
+<ion-content [fullscreen]="true" class="planner-content">
+  <header class="planner-topbar">
+    <a class="back-control" routerLink="/tabs/home" aria-label="Back to Home"><ion-icon name="chevron-forward-outline" style="transform: rotate(180deg)"></ion-icon></a>
+    <span>Weather Forecast</span>
+    <button class="icon-control page-refresh" type="button" aria-label="Refresh weather" [disabled]="loading" (click)="refreshForecast()"><ion-icon name="refresh-outline"></ion-icon></button>
+  </header>
+  <main class="planner-shell weather-shell">
+    <p class="section-kicker">LOCAL FORECAST</p>
+    <section class="weather-current">
+      <div><p class="weather-place"><ion-icon name="location-outline"></ion-icon> Manila, Philippines</p><h1>{{ temperature }}°</h1><p class="weather-description">{{ description(weatherCode) }}</p><p class="weather-updated">Feels like {{ feelsLike }}° · {{ updatedAt }}</p></div>
+      <ion-icon class="weather-current-icon" [name]="icon(weatherCode)"></ion-icon>
+    </section>
+    <section class="weather-facts">
+      <article class="planner-card"><ion-icon name="water-outline"></ion-icon><span>Humidity</span><strong>{{ humidity }}%</strong></article>
+      <article class="planner-card"><ion-icon name="speedometer-outline"></ion-icon><span>Wind</span><strong>{{ windSpeed }} km/h</strong></article>
+    </section>
+    <section class="forecast-section">
+      <div class="forecast-heading"><h2>5-day forecast</h2><span><ion-icon name="calendar-outline"></ion-icon> Manila time</span></div>
+      <article class="planner-card forecast-row" *ngFor="let day of forecast">
+        <strong>{{ day.date | date:'EEE, MMM d' }}</strong>
+        <ion-icon [name]="icon(day.code)"></ion-icon>
+        <span>{{ description(day.code) }}</span>
+        <b>{{ day.high }}° <small>{{ day.low }}°</small></b>
+      </article>
+    </section>
+    <p class="weather-source">Forecast provided by Open-Meteo. {{ loading ? 'Updating…' : '' }}</p>
+  </main>
+</ion-content>

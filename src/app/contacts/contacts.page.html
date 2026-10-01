@@ -1,0 +1,19 @@
+<ion-content [fullscreen]="true" class="planner-content">
+  <header class="planner-topbar"><a class="back-control" routerLink="/tabs/home" aria-label="Back to Home"><ion-icon name="chevron-forward-outline" style="transform: rotate(180deg)"></ion-icon></a><span>Family Contacts</span></header>
+  <main class="planner-shell">
+    <div class="page-heading"><div><p class="section-kicker">STAY CONNECTED</p><h1>Family Directory</h1><p>Important and emergency contacts for your trip.</p></div><button class="planner-button" type="button" (click)="showForm = !showForm"><ion-icon name="add-outline"></ion-icon>Add contact</button></div>
+    <form *ngIf="showForm" #contactForm="ngForm" class="planner-card form-card" (ngSubmit)="addContact()">
+      <h2>New contact</h2>
+      <div class="form-fields"><ion-input label="Full name" label-placement="stacked" name="name" [(ngModel)]="draft.name" required></ion-input><ion-input label="Relationship" label-placement="stacked" name="relationship" [(ngModel)]="draft.relationship"></ion-input><ion-input label="Phone number" label-placement="stacked" type="tel" name="phone" [(ngModel)]="draft.phone"></ion-input><ion-input label="Email address" label-placement="stacked" type="email" name="email" [(ngModel)]="draft.email" email></ion-input></div>
+      <button class="planner-button" type="submit" [disabled]="contactForm.invalid">Save contact</button>
+    </form>
+    <section class="contact-list">
+      <article class="planner-card contact-row" *ngFor="let contact of contacts">
+        <span class="contact-avatar"><ion-icon name="people-outline"></ion-icon></span>
+        <div class="contact-details"><h2>{{ contact.name }}</h2><p>{{ contact.relationship || 'Family member' }}</p><a *ngIf="contact.phone" [href]="'tel:' + contact.phone"><ion-icon name="call-outline"></ion-icon>{{ contact.phone }}</a><a *ngIf="contact.email" [href]="'mailto:' + contact.email"><ion-icon name="mail-outline"></ion-icon>{{ contact.email }}</a><span *ngIf="!contact.phone && !contact.email" class="contact-empty">Add a phone or email when available</span></div>
+        <button class="icon-control" type="button" aria-label="Remove contact" (click)="removeContact(contact.id)"><ion-icon name="trash-outline"></ion-icon></button>
+      </article>
+      <div *ngIf="contacts.length === 0" class="planner-card empty-state"><ion-icon name="people-outline"></ion-icon><h2>No contacts saved</h2><p>Add someone to your travel directory.</p></div>
+    </section>
+  </main>
+</ion-content>

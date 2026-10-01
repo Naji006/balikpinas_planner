@@ -1,0 +1,66 @@
+<ion-content [fullscreen]="true" class="planner-content">
+  <header class="planner-topbar detail-topbar">
+    <button class="back-control" type="button" aria-label="Back to trips" (click)="goBack()"><ion-icon name="arrow-back-outline"></ion-icon></button>
+    <span>Trip Details</span>
+    <button class="icon-control detail-more" type="button" aria-label="Trip options"><ion-icon name="ellipsis-horizontal"></ion-icon></button>
+  </header>
+
+  <main class="planner-shell detail-shell">
+    <section class="trip-hero">
+      <div>
+        <p class="section-kicker">UPCOMING JOURNEY</p>
+        <h1>Manila, Philippines</h1>
+        <p><ion-icon name="calendar-outline"></ion-icon> Dec 20, 2026 — Jan 10, 2027</p>
+      </div>
+    </section>
+
+    <nav class="segment-control detail-segments" aria-label="Trip sections">
+      <button *ngFor="let section of sections" type="button" [class.active]="activeSection === section" (click)="activeSection = section">{{ section }}</button>
+    </nav>
+
+    <section *ngIf="activeSection === 'Overview'" class="detail-body">
+      <article class="planner-card flight-card">
+        <div class="card-heading"><h2><ion-icon name="airplane-outline"></ion-icon> Flight Information</h2><span class="badge"><ion-icon name="checkmark-circle-outline"></ion-icon> On Schedule</span></div>
+        <div class="airline-row"><div class="airline-mark">PAL</div><div><strong>Philippine Airlines</strong><p>PR 102 · Economy</p></div></div>
+        <div class="flight-route">
+          <div><span class="route-code">DXB</span><span class="route-time">Dec 20 · 10:30 PM</span></div>
+          <div class="route-line"><ion-icon name="airplane-outline"></ion-icon></div>
+          <div class="route-arrival"><span class="route-code">MNL</span><span class="route-time">Dec 21 · 10:45 AM</span></div>
+        </div>
+      </article>
+
+      <div class="planner-grid detail-metrics">
+        <article class="planner-card metric-card"><div class="metric-heading"><ion-icon name="cloud-outline"></ion-icon><span>Weather in Manila</span></div><strong>32°C</strong><p>Mostly sunny</p></article>
+        <article class="planner-card metric-card"><div class="metric-heading"><ion-icon name="wallet-outline"></ion-icon><span>Estimated Budget</span></div><strong>₱50,000</strong><p>₱20,000 spent</p><div class="budget-track"><span></span></div></article>
+      </div>
+
+      <button class="planner-button full-button" type="button" (click)="activeSection = 'Itinerary'">View Full Itinerary <ion-icon name="chevron-forward-outline"></ion-icon></button>
+    </section>
+
+    <section *ngIf="activeSection === 'Flight'" class="detail-body">
+      <article class="planner-card flight-card">
+        <div class="card-heading"><h2>Flight status</h2><span class="badge"><ion-icon name="checkmark-circle-outline"></ion-icon> On Schedule</span></div>
+        <div class="airline-row"><div class="airline-mark">PAL</div><div><strong>Philippine Airlines</strong><p>PR 102 · Boeing 777</p></div></div>
+        <div class="flight-route"><div><span class="route-code">DXB</span><span class="route-time">Dubai · Dec 20, 10:30 PM</span></div><div class="route-line"><ion-icon name="airplane-outline"></ion-icon></div><div class="route-arrival"><span class="route-code">MNL</span><span class="route-time">Manila · Dec 21, 10:45 AM</span></div></div>
+        <p class="flight-note">Times are shown in local airport time.</p>
+      </article>
+    </section>
+
+    <section *ngIf="activeSection === 'Itinerary'" class="detail-body">
+      <div class="page-heading itinerary-heading"><div><span class="section-kicker">TRIP SCHEDULE</span><h2>Itinerary</h2></div><button class="planner-button" type="button" (click)="showActivityForm = !showActivityForm">Add activity</button></div>
+      <form *ngIf="showActivityForm" #activityForm="ngForm" class="planner-card form-card" (ngSubmit)="addActivity()">
+        <div class="form-fields"><ion-input label="Date" label-placement="stacked" type="date" name="date" [(ngModel)]="draftActivity.date" required></ion-input><ion-input label="Time" label-placement="stacked" type="time" name="time" [(ngModel)]="draftActivity.time" required></ion-input><ion-input label="Activity" label-placement="stacked" name="title" [(ngModel)]="draftActivity.title" required></ion-input><ion-input label="Location or note" label-placement="stacked" name="note" [(ngModel)]="draftActivity.note"></ion-input></div>
+        <button class="planner-button" type="submit" [disabled]="activityForm.invalid">Save activity</button>
+      </form>
+      <article class="planner-card timeline-item" *ngFor="let activity of activities">
+        <span class="timeline-dot"></span><div class="timeline-copy"><span class="timeline-time">{{ activity.date | date:'EEE, MMM d' }} · {{ activity.time }}</span><h3>{{ activity.title }}</h3><p>{{ activity.note }}</p></div>
+        <button class="icon-control" type="button" aria-label="Remove activity" (click)="removeActivity(activity.id)"><ion-icon name="close-outline"></ion-icon></button>
+      </article>
+    </section>
+
+    <section *ngIf="activeSection === 'Budget'" class="detail-body">
+      <article class="planner-card budget-summary"><p class="section-kicker">TRIP BUDGET</p><h2>₱50,000 <small>planned</small></h2><p>₱20,000 spent · ₱30,000 remaining</p><div class="budget-track"><span></span></div></article>
+      <p class="detail-hint">Add and update individual expenses in your Budget Planner.</p>
+    </section>
+  </main>
+</ion-content>

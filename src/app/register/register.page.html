@@ -1,0 +1,47 @@
+<ion-content [fullscreen]="true" class="auth-content">
+  <main class="auth-page register-page">
+    <section class="auth-panel" aria-labelledby="register-title">
+      <a class="back-link" routerLink="/login" aria-label="Back to login">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </a>
+      <header class="auth-heading">
+        <h1 id="register-title">Create an Account</h1>
+        <p>Start planning your homecoming today!</p>
+      </header>
+      <form #registerForm="ngForm" class="auth-form">
+        <label class="input-row">
+          <ion-icon name="person-outline" aria-hidden="true"></ion-icon>
+          <ion-input label="Full Name" label-placement="stacked" name="fullName" autocomplete="name" [(ngModel)]="fullName" required></ion-input>
+        </label>
+        <label class="input-row">
+          <ion-icon name="mail-outline" aria-hidden="true"></ion-icon>
+          <ion-input label="Email Address" label-placement="stacked" type="email" name="email" autocomplete="email" [(ngModel)]="email" required email></ion-input>
+        </label>
+        <label class="input-row">
+          <ion-icon name="call-outline" aria-hidden="true"></ion-icon>
+          <ion-input label="Mobile Number" label-placement="stacked" type="tel" name="phone" autocomplete="tel" [(ngModel)]="phone" required></ion-input>
+        </label>
+        <label class="input-row">
+          <ion-icon name="lock-closed-outline" aria-hidden="true"></ion-icon>
+          <ion-input label="Password" label-placement="stacked" [type]="passwordVisible ? 'text' : 'password'" name="password" autocomplete="new-password" [(ngModel)]="password" required minlength="8"></ion-input>
+          <button class="visibility-button" type="button" [attr.aria-label]="passwordVisible ? 'Hide password' : 'Show password'" (click)="passwordVisible = !passwordVisible">
+            <ion-icon [name]="passwordVisible ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+          </button>
+        </label>
+        <label class="input-row">
+          <ion-icon name="lock-closed-outline" aria-hidden="true"></ion-icon>
+          <ion-input label="Confirm Password" label-placement="stacked" [type]="confirmPasswordVisible ? 'text' : 'password'" name="confirmPassword" autocomplete="new-password" [(ngModel)]="confirmPassword" required></ion-input>
+          <button class="visibility-button" type="button" [attr.aria-label]="confirmPasswordVisible ? 'Hide password' : 'Show password'" (click)="confirmPasswordVisible = !confirmPasswordVisible">
+            <ion-icon [name]="confirmPasswordVisible ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+          </button>
+        </label>
+        @if (registrationError) {
+          <p class="form-error" role="alert">{{ registrationError }}</p>
+        }
+        <ion-button class="primary-action" expand="block" type="button" [disabled]="registerForm.invalid || password !== confirmPassword" (click)="register()">Register</ion-button>
+      </form>
+      <p class="auth-switch">Already have an account? <a routerLink="/login">Log In</a></p>
+      <div class="register-art">See you in the Philippines.</div>
+    </section>
+  </main>
+</ion-content>

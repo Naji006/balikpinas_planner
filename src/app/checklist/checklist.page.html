@@ -1,0 +1,23 @@
+<ion-content [fullscreen]="true" class="planner-content">
+  <header class="planner-topbar"><a class="back-control" routerLink="/tabs/home" aria-label="Back to Home"><ion-icon name="chevron-forward-outline" style="transform: rotate(180deg)"></ion-icon></a><span>Checklist Manager</span></header>
+  <main class="planner-shell">
+    <div class="page-heading"><div><p class="section-kicker">GET READY</p><h1>Travel Checklist</h1><p>Keep every detail on track before takeoff.</p></div></div>
+    <section class="planner-card checklist-progress">
+      <div class="progress-heading"><div><strong>{{ completedCount }} of {{ tasks.length }}</strong><span> tasks complete</span></div><ion-icon name="checkmark-circle-outline"></ion-icon></div>
+      <div class="budget-track"><span [style.width.%]="progress"></span></div>
+    </section>
+    <form class="planner-card add-task" (ngSubmit)="addTask()"><ion-input aria-label="New checklist item" placeholder="Add an item to your packing list" name="newTask" [(ngModel)]="draftTitle" required></ion-input><button class="planner-button" type="submit" [disabled]="!draftTitle.trim()" aria-label="Add checklist item"><ion-icon name="add-outline"></ion-icon></button></form>
+    <nav class="segment-control checklist-filters" aria-label="Checklist filter"><button type="button" [class.active]="activeFilter === 'all'" (click)="activeFilter = 'all'">All items</button><button type="button" [class.active]="activeFilter === 'open'" (click)="activeFilter = 'open'">To do</button></nav>
+    <section class="task-list">
+      @for (task of visibleTasks; track task.id) {
+        <article class="planner-card task-row">
+          <ion-checkbox [checked]="task.done" [attr.aria-label]="task.done ? 'Mark incomplete' : 'Mark complete'" (ionChange)="task.done = $event.detail.checked; save()"></ion-checkbox>
+          <div class="task-copy" [class.done]="task.done"><strong>{{ task.title }}</strong><span>{{ task.category }}</span></div>
+          <button class="icon-control" type="button" aria-label="Remove item" (click)="removeTask(task.id)"><ion-icon name="trash-outline"></ion-icon></button>
+        </article>
+      } @empty {
+        <div class="planner-card empty-state"><ion-icon name="list-outline"></ion-icon><h2>All caught up</h2><p>Nothing left on this filter.</p></div>
+      }
+    </section>
+  </main>
+</ion-content>

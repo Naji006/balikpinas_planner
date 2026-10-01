@@ -1,0 +1,11 @@
+.profile-shell { max-width: 820px; }
+.profile-card { display: flex; align-items: center; gap: 14px; padding: 18px; }
+.profile-avatar { display: grid; width: 64px; height: 64px; flex: 0 0 auto; place-items: center; border-radius: 50%; background: #e4edf5; color: #316d99; font-size: 54px; }
+.profile-card .section-kicker { margin-bottom: 4px; }
+.profile-card h1 { margin: 0; color: #203b56; font-size: 20px; }
+.profile-card p:last-child { margin: 4px 0 0; color: #718193; font-size: 12px; }
+.activity-section { margin-top: 24px; }
+.activity-section .page-heading { align-items: center; }
+.activity-section .page-heading h2 { margin: 0; color: #203b56; font-size: 19px; }
+.activity-section .page-heading > ion-icon { color: #3a7898; font-size: 24px; }
+.activity-row { align-items: flex-start; }

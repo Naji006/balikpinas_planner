@@ -1,0 +1,7 @@
+{
+  "name": "balikpinas-planner",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

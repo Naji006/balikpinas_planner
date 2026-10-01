@@ -1,0 +1,36 @@
+<ion-content [fullscreen]="true" class="planner-content">
+  <header class="planner-topbar">
+    <a class="back-control" routerLink="/tabs/home" aria-label="Back to Home"><ion-icon name="chevron-forward-outline" style="transform: rotate(180deg)"></ion-icon></a>
+    <span>Documents</span>
+  </header>
+  <main class="planner-shell">
+    <div class="page-heading">
+      <div><p class="section-kicker">TRAVEL FILES</p><h1>Documents</h1><p>Keep your important travel files close.</p></div>
+    </div>
+
+    <section class="planner-card upload-panel">
+      <input #filePicker type="file" hidden multiple accept=".pdf,.png,.jpg,.jpeg" (change)="filesSelected($event)">
+      <div class="upload-symbol"><ion-icon name="cloud-upload-outline"></ion-icon></div>
+      <h2>Upload {{ selectedCategory === 'document' ? 'document' : 'receipt' }}</h2>
+      <p>PDF, JPG, PNG</p>
+      <button class="planner-button" type="button" (click)="filePicker.click()">Choose files</button>
+    </section>
+
+    <nav class="segment-control" aria-label="File category">
+      <button type="button" [class.active]="selectedCategory === 'document'" (click)="selectedCategory = 'document'">My Documents</button>
+      <button type="button" [class.active]="selectedCategory === 'receipt'" (click)="selectedCategory = 'receipt'">Receipts</button>
+    </nav>
+
+    <p *ngIf="selectedCategory === 'receipt'" class="receipt-total">Tracked travel expenses <strong>₱{{ receiptTotal | number:'1.0-0' }}</strong></p>
+    <p *ngIf="statusMessage" class="upload-message" role="status">{{ statusMessage }}</p>
+
+    <section class="data-list file-list" aria-label="Saved files">
+      <article class="planner-card data-row" *ngFor="let file of visibleFiles">
+        <span class="row-icon"><ion-icon [name]="file.category === 'receipt' ? 'receipt-outline' : 'document-text-outline'"></ion-icon></span>
+        <div class="row-main"><h2>{{ file.name }}</h2><p>{{ file.fileName }}</p><p>{{ file.updated }}</p><label *ngIf="file.category === 'receipt'" class="receipt-amount">Expense (₱)<ion-input type="number" min="0" name="amount-{{ file.id }}" [(ngModel)]="file.amount" (ionChange)="saveFiles()"></ion-input></label></div>
+        <div class="file-actions"><button class="icon-control" type="button" aria-label="Download file" (click)="downloadFile(file)"><ion-icon name="download-outline"></ion-icon></button><button class="icon-control" type="button" aria-label="Remove file" (click)="removeFile(file.id)"><ion-icon name="trash-outline"></ion-icon></button></div>
+      </article>
+      <div *ngIf="visibleFiles.length === 0" class="planner-card empty-state"><ion-icon name="document-text-outline"></ion-icon><h2>No files yet</h2><p>Upload a file to add it to this folder.</p></div>
+    </section>
+  </main>
+</ion-content>

@@ -1,0 +1,11 @@
+.upload-panel { display: grid; justify-items: center; padding: 22px 16px; margin-bottom: 18px; border: 1px dashed #b8cbd9; background: #f9fbfd; text-align: center; }
+.upload-symbol { display: grid; width: 46px; height: 46px; place-items: center; border-radius: 50%; background: #e2eff9; color: #2774ac; font-size: 24px; }
+.upload-panel h2 { margin: 10px 0 2px; color: #203b56; font-size: 14px; }
+.upload-panel p { margin: 0 0 12px; color: #7b8997; font-size: 11px; }
+.file-list { margin-top: 12px; }
+.receipt-total { display: flex; justify-content: space-between; margin: 12px 2px 0; color: #718193; font-size: 11px; }
+.receipt-total strong { color: #29445e; }
+.upload-message { color: #28745f; font-size: 11px; }
+.receipt-amount { display: flex; align-items: center; gap: 6px; margin-top: 8px; color: #7b8997; font-size: 10px; }
+.receipt-amount ion-input { width: 90px; --padding-start: 6px; --padding-end: 6px; --background: #f3f6f8; --border-radius: 4px; min-height: 26px; font-size: 11px; }
+.file-actions { display: flex; gap: 5px; }
