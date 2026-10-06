@@ -1,0 +1,87 @@
+{
+  "users": [
+    {
+      "id": "abe01bf2-afa0-4fd5-baf5-809e71c6fa31",
+      "email": "offline2@test.com",
+      "password_hash": "$2b$12$yIor1cWzsOfLr2I2eD3tXuAnc7pwH8nRcXYvOys5ioNjfOFL/3BU2",
+      "fullName": "Offline User 2",
+      "phone": "09170000003"
+    },
+    {
+      "id": "d8d499da-104f-4942-94c6-3a967d33ee56",
+      "email": "najipangilinan06@gmail.com",
+      "password_hash": "$2b$12$MbuZ.AOQDsBCcJBQqgdZjOh4NHz49sH5DCvsBT6pQPveiQgpX0mOe",
+      "fullName": "Jian L. Pangilinan",
+      "phone": "09071158248"
+    }
+  ],
+  "sessions": [
+    {
+      "token_hash": "23a00789c58bfcd17bbb00d153a4e3d17ef356c31c479c1b0d0b401a79376661",
+      "user_id": "abe01bf2-afa0-4fd5-baf5-809e71c6fa31",
+      "expires_at": "2026-10-08T07:25:38.269Z"
+    },
+    {
+      "token_hash": "02fecde98e8b8a40c6d2a739bce2e200abdc89b301f0b690ce256428b8229a33",
+      "user_id": "abe01bf2-afa0-4fd5-baf5-809e71c6fa31",
+      "expires_at": "2026-10-08T07:25:38.635Z"
+    },
+    {
+      "token_hash": "c1fe56e7f4f2d3bdcc34e8eea651115d9a6d1d27b898dfa75da612678b4a052d",
+      "user_id": "d8d499da-104f-4942-94c6-3a967d33ee56",
+      "expires_at": "2026-10-10T05:04:46.582Z"
+    }
+  ],
+  "plannerData": {
+    "abe01bf2-afa0-4fd5-baf5-809e71c6fa31": {
+      "trips": [
+        {
+          "id": 2,
+          "name": "Offline trip 2"
+        }
+      ]
+    },
+    "d8d499da-104f-4942-94c6-3a967d33ee56": {
+      "trips": [
+        {
+          "id": 1791006614232,
+          "destination": "Manila",
+          "originAirport": "Nevada",
+          "destinationAirport": "NAIA",
+          "startDate": "2026-10-03",
+          "endDate": "2026-10-09",
+          "flight": "To be confirmed"
+        }
+      ]
+    }
+  },
+  "activity": {
+    "d8d499da-104f-4942-94c6-3a967d33ee56": [
+      {
+        "id": "27ffa691-39ba-421a-87ee-23519dd576dd",
+        "action": "trip-created",
+        "description": "Manila",
+        "email": null,
+        "amount": null,
+        "createdAt": "2026-10-03T05:50:14.258Z"
+      },
+      {
+        "id": "0b55f16a-5ec8-4d91-b3a4-f3bebcdcac37",
+        "action": "login",
+        "description": "Successful sign-in",
+        "email": "najipangilinan06@gmail.com",
+        "amount": null,
+        "createdAt": "2026-10-03T05:13:44.512Z"
+      },
+      {
+        "id": "fea86b82-0cce-4210-beae-3d655ba7b959",
+        "action": "registration",
+        "description": "Account registered",
+        "email": "najipangilinan06@gmail.com",
+        "amount": null,
+        "createdAt": "2026-10-03T05:04:46.604Z"
+      }
+    ]
+  },
+  "attachments": {}
+}

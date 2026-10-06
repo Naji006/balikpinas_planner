@@ -51,6 +51,7 @@ export class RegisterPage {
         email: this.email.trim().toLowerCase(),
         createdAt: new Date().toISOString()
       });
+      await this.store.clearSession();
       await this.router.navigateByUrl('/login?registered=1');
     } catch {
       this.registrationError = 'This browser could not save the account. Please try again.';

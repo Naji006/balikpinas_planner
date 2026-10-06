@@ -24,4 +24,10 @@ describe('TripDetailsPage', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should map weather codes to readable labels and icons', () => {
+    expect(component.description(2)).toBe('Partly cloudy');
+    expect(component.description(61)).toBe('Rain showers');
+    expect(component.icon(95)).toBe('thunderstorm-outline');
+  });
 });

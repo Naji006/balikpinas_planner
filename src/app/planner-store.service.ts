@@ -18,38 +18,85 @@ export interface AccountProfile {
   phone: string;
 }
 
+export interface SelectedTrip {
+  id: number;
+  destination: string;
+  originAirport?: string;
+  destinationAirport?: string;
+  airline?: string;
+  terminal?: string;
+  bookingReference?: string;
+  hotel?: string;
+  travelers?: number;
+  startDate: string;
+  endDate: string;
+  flight: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class PlannerStoreService {
   private readonly apiUrl = environment.apiUrl;
   private currentUser: AccountProfile | null = null;
   private readonly loadedCollections = new Set<string>();
+  private readonly collectionWrites = new Map<string, Promise<void>>();
   private readonly http = inject(HttpClient);
 
+  constructor() {
+    if (typeof window !== 'undefined') {
+      window.addEventListener('online', () => void this.flushPendingWrites());
+    }
+  }
+
   async load<T>(key: string, fallback: T): Promise<T> {
-    const result = await firstValueFrom(this.http.get<{ value: T | null }>(
-      `${this.apiUrl}/collections/${encodeURIComponent(key)}`,
-      { withCredentials: true }
-    ));
-    this.loadedCollections.add(key);
-    return result.value ?? fallback;
+    const pending = this.readPendingWrites();
+    if (Object.hasOwn(pending, key)) {
+      try {
+        await this.writeCollection(key, pending[key]);
+        this.clearPendingWrite(key, pending[key]);
+        this.cacheCollection(key, pending[key]);
+      } catch (error) {
+        if (!this.isNetworkError(error)) throw error;
+      }
+      this.loadedCollections.add(key);
+      return pending[key] as T;
+    }
+
+    try {
+      const result = await firstValueFrom(this.http.get<{ value: T | null }>(
+        `${this.apiUrl}/collections/${encodeURIComponent(key)}`,
+        { withCredentials: true }
+      ));
+      const value = result.value ?? fallback;
+      this.cacheCollection(key, value);
+      this.loadedCollections.add(key);
+      return value;
+    } catch (error) {
+      if (!this.isNetworkError(error)) throw error;
+      this.loadedCollections.add(key);
+      const cached = this.readCachedCollection<T>(key);
+      return cached.found ? cached.value : fallback;
+    }
   }
 
   async save<T>(key: string, value: T): Promise<void> {
     if (!this.loadedCollections.has(key)) {
       throw new Error(`Cannot save ${key} before it has loaded successfully`);
     }
-    await firstValueFrom(this.http.put(
-      `${this.apiUrl}/collections/${encodeURIComponent(key)}`,
-      { value },
-      { withCredentials: true }
-    ));
+    this.cacheCollection(key, value);
+    this.queueWrite(key, value);
+    try {
+      await this.writeCollection(key, value);
+      this.clearPendingWrite(key, value);
+    } catch (error) {
+      if (!this.isNetworkError(error)) throw error;
+    }
   }
 
   async registerAccount(details: AccountProfile, password: string): Promise<boolean> {
     try {
-      this.currentUser = await firstValueFrom(this.http.post<AccountProfile>(
+      this.setSession(await firstValueFrom(this.http.post<AccountProfile>(
         `${this.apiUrl}/auth/register`, { ...details, password }, { withCredentials: true }
-      ));
+      )));
       this.loadedCollections.clear();
       return true;
     } catch (error) {
@@ -60,9 +107,9 @@ export class PlannerStoreService {
 
   async authenticateUser(email: string, password: string): Promise<AccountProfile | null> {
     try {
-      this.currentUser = await firstValueFrom(this.http.post<AccountProfile>(
+      this.setSession(await firstValueFrom(this.http.post<AccountProfile>(
         `${this.apiUrl}/auth/login`, { email, password }, { withCredentials: true }
-      ));
+      )));
       this.loadedCollections.clear();
       return this.currentUser;
     } catch (error) {
@@ -73,26 +120,39 @@ export class PlannerStoreService {
 
   setSession(user: AccountProfile): void {
     this.currentUser = user;
+    this.writeStorage(this.userStorageKey(), user);
   }
 
   async getSession(): Promise<AccountProfile | null> {
     try {
-      this.currentUser = await firstValueFrom(this.http.get<AccountProfile>(
+      this.setSession(await firstValueFrom(this.http.get<AccountProfile>(
         `${this.apiUrl}/auth/me`, { withCredentials: true }
-      ));
+      )));
+      await this.flushPendingWrites();
       return this.currentUser;
-    } catch {
+    } catch (error) {
+      if (this.isNetworkError(error)) {
+        this.currentUser = this.readStorage<AccountProfile>(this.userStorageKey());
+        return this.currentUser;
+      }
       this.currentUser = null;
+      this.removeStorage(this.userStorageKey());
       return null;
     }
   }
 
   async clearSession(): Promise<void> {
+    const userStorageKey = this.userStorageKey();
     this.currentUser = null;
     this.loadedCollections.clear();
-    await firstValueFrom(this.http.post(
-      `${this.apiUrl}/auth/logout`, {}, { withCredentials: true }
-    ));
+    this.removeStorage(userStorageKey);
+    try {
+      await firstValueFrom(this.http.post(
+        `${this.apiUrl}/auth/logout`, {}, { withCredentials: true }
+      ));
+    } catch (error) {
+      if (!this.isNetworkError(error)) throw error;
+    }
   }
 
   async saveAttachment(id: number, file: File): Promise<void> {
@@ -126,5 +186,115 @@ export class PlannerStoreService {
     return firstValueFrom(this.http.get<PlannerTransaction[]>(
       `${this.apiUrl}/activity`, { withCredentials: true }
     ));
+  }
+
+  setSelectedTrip(trip: SelectedTrip | null): void {
+    if (!trip) {
+      this.removeStorage(this.selectedTripStorageKey());
+      return;
+    }
+    this.writeStorage(this.selectedTripStorageKey(), trip);
+  }
+
+  getSelectedTrip(): SelectedTrip | null {
+    return this.readStorage<SelectedTrip>(this.selectedTripStorageKey());
+  }
+
+  private async flushPendingWrites(): Promise<void> {
+    if (!this.currentUser) return;
+    const pending = this.readPendingWrites();
+    for (const [key, value] of Object.entries(pending)) {
+      try {
+        await this.writeCollection(key, value);
+        this.clearPendingWrite(key, value);
+      } catch {
+        return;
+      }
+    }
+  }
+
+  private writeCollection(key: string, value: unknown): Promise<void> {
+    const send = () => firstValueFrom(this.http.put(
+        `${this.apiUrl}/collections/${encodeURIComponent(key)}`,
+        { value },
+        { withCredentials: true }
+      )).then(() => undefined);
+    const previous = this.collectionWrites.get(key);
+    const write = previous ? previous.catch(() => undefined).then(send) : send();
+    this.collectionWrites.set(key, write);
+    return write.finally(() => {
+      if (this.collectionWrites.get(key) === write) this.collectionWrites.delete(key);
+    });
+  }
+
+  private isNetworkError(error: unknown): boolean {
+    return error instanceof HttpErrorResponse && (error.status === 0 || error.status >= 500);
+  }
+
+  private userStorageKey(): string {
+    return 'balikpinas:last-session';
+  }
+
+  private collectionStorageKey(key: string): string {
+    const email = encodeURIComponent(this.currentUser?.email.toLowerCase() ?? 'anonymous');
+    return `balikpinas:${email}:collection:${key}`;
+  }
+
+  private pendingStorageKey(): string {
+    const email = encodeURIComponent(this.currentUser?.email.toLowerCase() ?? 'anonymous');
+    return `balikpinas:${email}:pending`;
+  }
+
+  private selectedTripStorageKey(): string {
+    return 'balikpinas:selected-trip';
+  }
+
+  private cacheCollection(key: string, value: unknown): void {
+    this.writeStorage(this.collectionStorageKey(key), { value });
+  }
+
+  private readCachedCollection<T>(key: string): { found: boolean; value: T } {
+    const cached = this.readStorage<{ value: T }>(this.collectionStorageKey(key));
+    return cached ? { found: true, value: cached.value } : { found: false, value: undefined as T };
+  }
+
+  private readPendingWrites(): Record<string, unknown> {
+    return this.readStorage<Record<string, unknown>>(this.pendingStorageKey()) ?? {};
+  }
+
+  private queueWrite(key: string, value: unknown): void {
+    const pending = this.readPendingWrites();
+    pending[key] = value;
+    this.writeStorage(this.pendingStorageKey(), pending);
+  }
+
+  private clearPendingWrite(key: string, syncedValue: unknown): void {
+    const pending = this.readPendingWrites();
+    if (!Object.hasOwn(pending, key) || JSON.stringify(pending[key]) !== JSON.stringify(syncedValue)) return;
+    delete pending[key];
+    this.writeStorage(this.pendingStorageKey(), pending);
+  }
+
+  private readStorage<T>(key: string): T | null {
+    try {
+      const value = localStorage.getItem(key);
+      return value === null ? null : JSON.parse(value) as T;
+    } catch {
+      return null;
+    }
+  }
+
+  private writeStorage(key: string, value: unknown): void {
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+    } catch {
+    }
+  }
+
+  private removeStorage(key: string): void {
+    try {
+      localStorage.removeItem(key);
+    } catch {
+    }
   }
 }

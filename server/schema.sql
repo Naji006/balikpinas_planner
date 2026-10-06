@@ -13,6 +13,13 @@ CREATE TABLE IF NOT EXISTS users (
   created_at TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3)
 ) ENGINE=InnoDB;
 
+CREATE TABLE IF NOT EXISTS auth_login_limits (
+  client_hash CHAR(64) NOT NULL PRIMARY KEY,
+  window_started_at TIMESTAMP(3) NOT NULL,
+  attempts SMALLINT UNSIGNED NOT NULL,
+  INDEX auth_login_limits_window_idx (window_started_at)
+) ENGINE=InnoDB;
+
 CREATE TABLE IF NOT EXISTS user_sessions (
   token_hash CHAR(64) NOT NULL PRIMARY KEY,
   user_id CHAR(36) NOT NULL,

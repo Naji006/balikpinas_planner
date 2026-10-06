@@ -78,7 +78,8 @@ body {
 .form-card { display: grid; gap: 12px; padding: 16px; margin-bottom: 16px; }
 .form-card h2 { margin: 0; color: #173b60; font-size: 17px; }
 .form-fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: 12px; }
-.form-fields ion-input, .form-fields ion-select, .form-fields ion-textarea { --background: #f7f9fb; --border-color: #dce3ea; --border-radius: 6px; --border-style: solid; --border-width: 1px; --highlight-color-focused: #15558a; }
+.form-fields ion-input, .form-fields ion-select, .form-fields ion-textarea { --background: #f7f9fb; --border-color: #dce3ea; --border-radius: 6px; --border-style: solid; --border-width: 1px; --highlight-color-focused: #15558a; --color: #173b60; --placeholder-color: #7a8b9c; color: #173b60; }
+.form-fields ion-input::part(native), .form-fields ion-select::part(text), .form-fields ion-textarea::part(native) { color: #173b60; }
 .badge { display: inline-flex; align-items: center; padding: 4px 8px; border-radius: 20px; background: #e8f3ef; color: #26745f; font-size: 10px; font-weight: 700; }
 .empty-state { padding: 34px 18px; color: #68788a; text-align: center; }
 .empty-state ion-icon { color: #4783ad; font-size: 32px; }

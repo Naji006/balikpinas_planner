@@ -9,8 +9,8 @@
     <section class="trip-hero">
       <div>
         <p class="section-kicker">UPCOMING JOURNEY</p>
-        <h1>Manila, Philippines</h1>
-        <p><ion-icon name="calendar-outline"></ion-icon> Dec 20, 2026 — Jan 10, 2027</p>
+        <h1>{{ tripDestination }}</h1>
+        <p><ion-icon name="calendar-outline"></ion-icon> {{ tripStartDate | date:'mediumDate' }} — {{ tripEndDate | date:'mediumDate' }}</p>
       </div>
     </section>
 
@@ -21,17 +21,17 @@
     <section *ngIf="activeSection === 'Overview'" class="detail-body">
       <article class="planner-card flight-card">
         <div class="card-heading"><h2><ion-icon name="airplane-outline"></ion-icon> Flight Information</h2><span class="badge"><ion-icon name="checkmark-circle-outline"></ion-icon> On Schedule</span></div>
-        <div class="airline-row"><div class="airline-mark">PAL</div><div><strong>Philippine Airlines</strong><p>PR 102 · Economy</p></div></div>
+        <div class="airline-row"><div class="airline-mark">{{ tripAirline.slice(0, 3).toUpperCase() }}</div><div><strong>{{ tripAirline }}</strong><p>{{ tripFlight }} · {{ tripTerminal }} · {{ tripTravelers }} travelers</p></div></div>
         <div class="flight-route">
-          <div><span class="route-code">DXB</span><span class="route-time">Dec 20 · 10:30 PM</span></div>
+          <div><span class="route-code">{{ routeCode(tripOriginAirport) }}</span><span class="route-time">{{ tripOriginAirport }}</span></div>
           <div class="route-line"><ion-icon name="airplane-outline"></ion-icon></div>
-          <div class="route-arrival"><span class="route-code">MNL</span><span class="route-time">Dec 21 · 10:45 AM</span></div>
+          <div class="route-arrival"><span class="route-code">{{ routeCode(tripDestinationAirport) }}</span><span class="route-time">{{ tripDestinationAirport }}</span></div>
         </div>
       </article>
 
       <div class="planner-grid detail-metrics">
-        <article class="planner-card metric-card"><div class="metric-heading"><ion-icon name="cloud-outline"></ion-icon><span>Weather in Manila</span></div><strong>32°C</strong><p>Mostly sunny</p></article>
-        <article class="planner-card metric-card"><div class="metric-heading"><ion-icon name="wallet-outline"></ion-icon><span>Estimated Budget</span></div><strong>₱50,000</strong><p>₱20,000 spent</p><div class="budget-track"><span></span></div></article>
+        <article class="planner-card metric-card"><div class="metric-heading"><ion-icon name="cloud-outline"></ion-icon><span>Weather in {{ tripDestination.split(',')[0] }}</span></div><strong>{{ temperature }}°C</strong><p>{{ loadingWeather ? 'Loading…' : descriptionText }}</p></article>
+        <article class="planner-card metric-card"><div class="metric-heading"><ion-icon name="wallet-outline"></ion-icon><span>Booking</span></div><strong>{{ tripBookingReference }}</strong><p>{{ tripHotel }}</p><div class="budget-track"><span></span></div></article>
       </div>
 
       <button class="planner-button full-button" type="button" (click)="activeSection = 'Itinerary'">View Full Itinerary <ion-icon name="chevron-forward-outline"></ion-icon></button>

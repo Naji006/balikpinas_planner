@@ -24,4 +24,12 @@ describe('TripsPage', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should return a safe default weather summary when no forecast is loaded yet', () => {
+    expect(component.getTripWeather({ id: 1, destination: 'Manila, Philippines', startDate: '2026-12-20', endDate: '2027-01-10', flight: 'PR 102' })).toMatchObject({
+      temperature: expect.any(Number),
+      description: expect.any(String),
+      icon: expect.any(String)
+    });
+  });
 });

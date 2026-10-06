@@ -1,8 +1,8 @@
-import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { addIcons } from 'ionicons';
 import { airplaneOutline, eyeOffOutline, eyeOutline, lockClosedOutline, mailOutline } from 'ionicons/icons';
-import { PlannerStoreService } from '../planner-store.service';
+import { PlannerStoreService, type AccountProfile } from '../planner-store.service';
 
 @Component({
   selector: 'app-login',
@@ -10,7 +10,7 @@ import { PlannerStoreService } from '../planner-store.service';
   styleUrls: ['./login.page.scss'],
   standalone: false,
 })
-export class LoginPage {
+export class LoginPage implements OnInit {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly store = inject(PlannerStoreService);
@@ -30,32 +30,45 @@ export class LoginPage {
     });
   }
 
+  ngOnInit(): void {
+    void this.restoreSession();
+  }
+
+  private async restoreSession(): Promise<void> {
+    if (await this.store.getSession()) {
+      await this.router.navigateByUrl('/tabs/home');
+    }
+  }
+
   async login(): Promise<void> {
     this.loginError = '';
+    let user: AccountProfile | null;
     try {
-      const user = await this.store.authenticateUser(this.email, this.password);
-      if (!user) {
-        this.loginError = 'Email or password is incorrect.';
-        this.password = '';
-        this.changeDetector.markForCheck();
-        return;
-      }
-      await this.store.recordTransaction({
-        action: 'login',
-        description: 'Successful sign-in',
-        email: user.email,
-        createdAt: new Date().toISOString()
-      });
-      this.store.setSession(user);
-      this.email = '';
-      this.password = '';
-      this.rememberMe = false;
-      this.changeDetector.markForCheck();
+      user = await this.store.authenticateUser(this.email, this.password);
     } catch {
-      this.loginError = 'Sign-in could not be verified in this browser. Please try again.';
+      this.loginError = 'Unable to reach the sign-in service. Please try again later.';
       this.changeDetector.markForCheck();
       return;
     }
+
+    if (!user) {
+      this.loginError = 'Email or password is incorrect.';
+      this.password = '';
+      this.changeDetector.markForCheck();
+      return;
+    }
+
+    this.store.setSession(user);
+    this.email = '';
+    this.password = '';
+    this.rememberMe = false;
+    this.changeDetector.markForCheck();
+    void this.store.recordTransaction({
+      action: 'login',
+      description: 'Successful sign-in',
+      email: user.email,
+      createdAt: new Date().toISOString()
+    }).catch(() => undefined);
     await this.router.navigateByUrl('/tabs/home');
   }
 }
