@@ -15,6 +15,9 @@
       @if (registrationComplete) {
         <p class="form-success" role="status">Account created. Sign in to continue.</p>
       }
+      @if (passwordResetComplete) {
+        <p class="form-success" role="status">Password updated. Sign in with your new password.</p>
+      }
       <form #loginForm="ngForm" class="auth-form">
         <label class="input-row">
           <ion-icon name="mail-outline" aria-hidden="true"></ion-icon>
@@ -32,7 +35,7 @@
             <ion-checkbox name="rememberMe" [(ngModel)]="rememberMe"></ion-checkbox>
             <span>Remember me</span>
           </label>
-          <span class="text-link">Forgot Password?</span>
+          <a class="text-link" routerLink="/forgot-password">Forgot Password?</a>
         </div>
         @if (loginError) {
           <p class="form-error" role="alert">{{ loginError }}</p>
@@ -40,7 +43,7 @@
         <ion-button class="primary-action" expand="block" type="button" [disabled]="loginForm.invalid" (click)="login()">Log In</ion-button>
       </form>
       <div class="divider"><span>or</span></div>
-      <button class="google-action" type="button" disabled><span class="google-mark">G</span>Continue with Google</button>
+      <button class="google-action" type="button" [disabled]="googlePending" (click)="continueWithGoogle()"><span class="google-mark" aria-hidden="true">G</span>{{ googlePending ? 'Connecting…' : 'Continue with Google' }}</button>
       <p class="auth-switch">Don’t have an account? <a routerLink="/register">Register</a></p>
     </section>
   </main>

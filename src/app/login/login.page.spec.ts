@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Router, provideRouter } from '@angular/router';
+import { ActivatedRoute, convertToParamMap, Router, provideRouter } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
 import { vi } from 'vitest';
 import { LoginPage } from './login.page';
 import { PlannerStoreService } from '../planner-store.service';
@@ -7,6 +8,7 @@ import { PlannerStoreService } from '../planner-store.service';
 describe('LoginPage', () => {
   let component: LoginPage;
   let fixture: ComponentFixture<LoginPage>;
+  let queryParams: BehaviorSubject<ReturnType<typeof convertToParamMap>>;
   const registeredUser = {
     email: 'maria.demo@example.com',
     fullName: 'Maria Santos',
@@ -16,6 +18,8 @@ describe('LoginPage', () => {
     authenticateUser: vi.fn().mockResolvedValue(registeredUser),
     getSession: vi.fn().mockResolvedValue(null),
     recordTransaction: vi.fn().mockResolvedValue(undefined),
+    googleSignInUrl: vi.fn(),
+    completeGoogleSignIn: vi.fn().mockResolvedValue(registeredUser),
     setSession: vi.fn()
   };
 
@@ -23,8 +27,10 @@ describe('LoginPage', () => {
     vi.clearAllMocks();
     store.authenticateUser.mockResolvedValue(registeredUser);
     store.getSession.mockResolvedValue(null);
+    queryParams = new BehaviorSubject(convertToParamMap({}));
     TestBed.configureTestingModule({
-      providers: [provideRouter([]), { provide: PlannerStoreService, useValue: store }]
+      providers: [provideRouter([]), { provide: PlannerStoreService, useValue: store },
+        { provide: ActivatedRoute, useValue: { queryParamMap: queryParams.asObservable() } }]
     });
     fixture = TestBed.createComponent(LoginPage);
     component = fixture.componentInstance;
@@ -88,5 +94,30 @@ describe('LoginPage', () => {
     expect(component.loginError).toBe('');
     expect(store.setSession).toHaveBeenCalledWith(registeredUser);
     expect(navigateSpy).toHaveBeenCalledWith('/tabs/home');
+  });
+
+  it('shows an actionable error when Google sign-in is unavailable', async () => {
+    store.googleSignInUrl.mockRejectedValueOnce(new Error('Not configured'));
+    await component.continueWithGoogle();
+    expect(component.loginError).toBe('Google sign-in is unavailable. Please try again later.');
+    expect(component.googlePending).toBe(false);
+  });
+
+  it('confirms a successful Google callback before navigating to the planner', async () => {
+    const navigateSpy = vi.spyOn(TestBed.inject(Router), 'navigateByUrl').mockResolvedValue(true);
+    queryParams.next(convertToParamMap({ google: 'success' }));
+    component.ngOnInit();
+    await vi.waitFor(() => expect(navigateSpy).toHaveBeenCalledWith('/tabs/home'));
+    expect(store.completeGoogleSignIn).toHaveBeenCalled();
+    expect(store.recordTransaction).toHaveBeenCalledWith(expect.objectContaining({ description: 'Successful Google sign-in' }));
+  });
+
+  it('stays on login when a Google callback cannot confirm its server session', async () => {
+    const navigateSpy = vi.spyOn(TestBed.inject(Router), 'navigateByUrl').mockResolvedValue(true);
+    store.completeGoogleSignIn.mockRejectedValueOnce(new Error('No server session'));
+    queryParams.next(convertToParamMap({ google: 'success' }));
+    component.ngOnInit();
+    await vi.waitFor(() => expect(component.loginError).toBe('Unable to confirm Google sign-in. Please try again.'));
+    expect(navigateSpy).not.toHaveBeenCalled();
   });
 });

@@ -21,11 +21,22 @@ export class LoginPage implements OnInit {
   passwordVisible = false;
   loginError = '';
   registrationComplete = false;
+  passwordResetComplete = false;
+  googlePending = false;
+  private googleResult = '';
 
   constructor() {
     addIcons({ airplaneOutline, eyeOffOutline, eyeOutline, lockClosedOutline, mailOutline });
     this.route.queryParamMap.subscribe(params => {
       this.registrationComplete = params.has('registered');
+      this.passwordResetComplete = params.has('passwordReset');
+      this.googleResult = params.get('google') || '';
+      const googleErrors: Record<string, string> = {
+        failed: 'Google sign-in could not be completed. Please try again.',
+        cancelled: 'Google sign-in was cancelled. You can try again.',
+        'existing-account': 'This email already has a password account. Sign in with your password, or use Forgot Password.'
+      };
+      this.loginError = googleErrors[this.googleResult] || '';
       this.changeDetector.markForCheck();
     });
   }
@@ -35,8 +46,33 @@ export class LoginPage implements OnInit {
   }
 
   private async restoreSession(): Promise<void> {
+    if (this.googleResult === 'success') {
+      try {
+        const user = await this.store.completeGoogleSignIn();
+        void this.store.recordTransaction({ action: 'login', description: 'Successful Google sign-in',
+          email: user.email, createdAt: new Date().toISOString() }).catch(() => undefined);
+        await this.router.navigateByUrl('/tabs/home');
+      } catch {
+        this.loginError = 'Unable to confirm Google sign-in. Please try again.';
+        this.changeDetector.markForCheck();
+      }
+      return;
+    }
     if (await this.store.getSession()) {
       await this.router.navigateByUrl('/tabs/home');
+    }
+  }
+
+  async continueWithGoogle(): Promise<void> {
+    if (this.googlePending) return;
+    this.googlePending = true;
+    this.loginError = '';
+    try {
+      window.location.assign(await this.store.googleSignInUrl());
+    } catch {
+      this.loginError = 'Google sign-in is unavailable. Please try again later.';
+      this.googlePending = false;
+      this.changeDetector.markForCheck();
     }
   }
 

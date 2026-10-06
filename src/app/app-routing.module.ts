@@ -22,6 +22,18 @@ const routes: Routes = [
   },
 
   {
+    path: 'forgot-password',
+    loadComponent: () => import('./password-recovery/password-recovery.page').then(m => m.PasswordRecoveryPage),
+    data: { reset: false }
+  },
+
+  {
+    path: 'reset-password',
+    loadComponent: () => import('./password-recovery/password-recovery.page').then(m => m.PasswordRecoveryPage),
+    data: { reset: true }
+  },
+
+  {
     path: 'tabs',
     canActivate: [registeredUserGuard],
     loadChildren: () =>

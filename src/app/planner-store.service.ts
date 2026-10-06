@@ -118,6 +118,38 @@ export class PlannerStoreService {
     }
   }
 
+  requestPasswordReset(email: string): Promise<{ message: string }> {
+    return firstValueFrom(this.http.post<{ message: string }>(
+      `${this.apiUrl}/auth/forgot-password`, { email }, { withCredentials: true }
+    ));
+  }
+
+  async resetPassword(token: string, password: string): Promise<void> {
+    await firstValueFrom(this.http.post(
+      `${this.apiUrl}/auth/reset-password`, { token, password }, { withCredentials: true }
+    ));
+    this.currentUser = null;
+    this.loadedCollections.clear();
+    this.removeStorage(this.userStorageKey());
+  }
+
+  async googleSignInUrl(): Promise<string> {
+    const result = await firstValueFrom(this.http.get<{ url: string }>(
+      `${this.apiUrl}/auth/google/start`, { withCredentials: true }
+    ));
+    return result.url;
+  }
+
+  async completeGoogleSignIn(): Promise<AccountProfile> {
+    // A Google callback must confirm its new server session before opening the planner.
+    const user = await firstValueFrom(this.http.get<AccountProfile>(
+      `${this.apiUrl}/auth/me`, { withCredentials: true }
+    ));
+    this.loadedCollections.clear();
+    this.setSession(user);
+    return user;
+  }
+
   setSession(user: AccountProfile): void {
     this.currentUser = user;
     this.writeStorage(this.userStorageKey(), user);
