@@ -5,7 +5,8 @@ import { PlannerStoreService } from '../planner-store.service';
 import { TripsPage } from './trips.page';
 
 const store = {
-  load: vi.fn((_key: string, fallback: unknown) => Promise.resolve(fallback))
+  load: vi.fn(() => Promise.resolve([])),
+  getSelectedTrip: vi.fn(() => null)
 };
 
 describe('TripsPage', () => {
@@ -26,9 +27,9 @@ describe('TripsPage', () => {
   });
 
   it('should return a safe default weather summary when no forecast is loaded yet', () => {
-    expect(component.getTripWeather({ id: 1, destination: 'Manila, Philippines', startDate: '2026-12-20', endDate: '2027-01-10', flight: 'PR 102' })).toMatchObject({
+    expect(component.getTripWeather({ ...component.newTrip, id: 1, destination: 'Manila, Philippines' })).toMatchObject({
       temperature: expect.any(Number),
-      description: expect.any(String),
+      summary: expect.any(String),
       icon: expect.any(String)
     });
   });

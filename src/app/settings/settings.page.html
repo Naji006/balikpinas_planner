@@ -1,13 +1,34 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>settings</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content [fullscreen]="true" class="planner-content">
+  <header class="planner-topbar">
+    <a class="back-control" routerLink="/tabs/home" aria-label="Back to Home"><ion-icon name="arrow-back-outline" aria-hidden="true"></ion-icon></a>
+    <span>Settings</span>
+  </header>
+  <main class="planner-shell settings-shell">
+    <div class="page-heading">
+      <div><p class="section-kicker">YOUR PREFERENCES</p><h1>Settings</h1><p>Make your planner feel right for you.</p></div>
+    </div>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">settings</ion-title>
-    </ion-toolbar>
-  </ion-header>
+    <section class="planner-card settings-section" aria-labelledby="appearance-heading">
+      <h2 id="appearance-heading"><ion-icon name="moon-outline" aria-hidden="true"></ion-icon> Appearance</h2>
+      <ion-toggle [checked]="settings.darkMode()" (ionChange)="settings.setDarkMode($event.detail.checked)" aria-describedby="dark-mode-description">
+        Dark Mode
+      </ion-toggle>
+      <p id="dark-mode-description">Use a darker look throughout BalikPinas Planner.</p>
+    </section>
+
+    <section class="planner-card settings-section" aria-labelledby="reminders-heading">
+      <h2 id="reminders-heading"><ion-icon name="notifications-outline" aria-hidden="true"></ion-icon> Notifications</h2>
+      <ion-toggle [checked]="settings.remindersEnabled()" [disabled]="settings.requestingPermission() || !settings.notificationsSupported" (ionChange)="changeReminders($event)" aria-describedby="reminder-description notification-status">
+        Reminder
+      </ion-toggle>
+      <p id="reminder-description">Allow notifications from this browser while the app is open. Scheduled trip alerts are not available yet.</p>
+      <p id="notification-status" role="status">{{ settings.requestingPermission() ? 'Waiting for notification permission…' : settings.notificationMessage() }}</p>
+      <button class="planner-button secondary" type="button" [disabled]="!settings.remindersEnabled() || settings.requestingPermission()" (click)="settings.sendTestNotification()">Send test notification</button>
+    </section>
+
+    <p class="settings-note">Preferences are saved on this browser.</p>
+    @if (settings.storageMessage()) {
+      <p class="settings-note" role="status">{{ settings.storageMessage() }}</p>
+    }
+  </main>
 </ion-content>
