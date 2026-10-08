@@ -1,0 +1,8 @@
+.settings-shell { max-width: 720px; }
+.settings-section { padding: 20px; margin-bottom: 16px; }
+.settings-section h2 { display: flex; align-items: center; gap: 9px; margin: 0 0 22px; color: var(--planner-text, #173b60); font-size: 17px; }
+.settings-section h2 ion-icon { color: var(--planner-accent, #276a9e); font-size: 22px; }
+.settings-section ion-toggle { display: block; --track-background: #8995a3; --track-background-checked: #287b68; }
+.settings-section ion-toggle::part(label) { font-weight: 700; }
+.settings-section p, .settings-note { color: var(--planner-muted, #6d7c8d); font-size: 13px; line-height: 1.6; }
+.settings-note { text-align: center; }

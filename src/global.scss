@@ -32,9 +32,7 @@
  * https://ionicframework.com/docs/theming/dark-mode
  */
 
-/* @import "@ionic/angular/css/palettes/dark.always.css"; */
-/* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import "@ionic/angular/css/palettes/dark.system.css";
+@import "@ionic/angular/css/palettes/dark.class.css";
 
 :root {
 	--ion-font-family: 'DM Sans', sans-serif;
@@ -51,38 +49,38 @@ body {
 	font-family: 'DM Sans', sans-serif;
 }
 
-.planner-content { --background: #f2f5f8; }
-.planner-topbar { position: sticky; top: 0; z-index: 10; display: flex; min-height: 58px; align-items: center; gap: 14px; padding: 0 18px; border-bottom: 1px solid #e5eaf0; background: #fff; color: #183a58; font-size: 15px; font-weight: 700; }
+.planner-content { --background: var(--planner-background, #f2f5f8); }
+.planner-topbar { position: sticky; top: 0; z-index: 10; display: flex; min-height: 58px; align-items: center; gap: 14px; padding: 0 18px; border-bottom: 1px solid var(--planner-border, #e5eaf0); background: var(--planner-surface, #fff); color: var(--planner-text, #183a58); font-size: 15px; font-weight: 700; }
 .planner-shell { width: min(100%, 980px); margin: 0 auto; padding: 22px 16px 36px; }
 .page-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 20px; }
-.page-heading h1 { margin: 0; color: #173b60; font-size: 26px; font-weight: 800; }
-.page-heading p { margin: 5px 0 0; color: #6d7c8d; font-size: 13px; }
-.section-kicker { margin: 0 0 6px; color: #167c68; font-size: 10px; font-weight: 800; letter-spacing: 1px; }
-.planner-card { border: 1px solid #e2e8ee; border-radius: 9px; background: #fff; box-shadow: 0 4px 14px #183a5809; }
+.page-heading h1 { margin: 0; color: var(--planner-text, #173b60); font-size: 26px; font-weight: 800; }
+.page-heading p { margin: 5px 0 0; color: var(--planner-muted, #6d7c8d); font-size: 13px; }
+.section-kicker { margin: 0 0 6px; color: var(--planner-success, #167c68); font-size: 10px; font-weight: 800; letter-spacing: 1px; }
+.planner-card { border: 1px solid var(--planner-border, #e2e8ee); border-radius: 9px; background: var(--planner-surface, #fff); box-shadow: 0 4px 14px #183a5809; }
 .planner-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 12px; }
 .planner-button { display: inline-flex; min-height: 42px; align-items: center; justify-content: center; gap: 8px; padding: 0 16px; border: 0; border-radius: 6px; background: #174f86; color: #fff; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; }
-.planner-button.secondary { border: 1px solid #dbe3ea; background: #fff; color: #29435d; }
+.planner-button.secondary { border: 1px solid var(--planner-border, #dbe3ea); background: var(--planner-surface, #fff); color: var(--planner-text, #29435d); }
 .planner-button:disabled { opacity: .45; cursor: not-allowed; }
-.icon-control { display: inline-grid; width: 38px; height: 38px; place-items: center; border: 1px solid #e0e6ec; border-radius: 6px; background: #fff; color: #40556a; font-size: 18px; }
-.back-control { display: inline-grid; width: 36px; height: 36px; flex: 0 0 auto; place-items: center; color: #29435d; font-size: 22px; text-decoration: none; }
+.icon-control { display: inline-grid; width: 38px; height: 38px; place-items: center; border: 1px solid var(--planner-border, #e0e6ec); border-radius: 6px; background: var(--planner-surface, #fff); color: var(--planner-muted, #40556a); font-size: 18px; }
+.back-control { display: inline-grid; width: 36px; height: 36px; flex: 0 0 auto; place-items: center; color: var(--planner-text, #29435d); font-size: 22px; text-decoration: none; }
 .data-list { display: grid; gap: 10px; }
 .data-row { display: flex; align-items: center; gap: 13px; padding: 14px; }
-.data-row h2, .data-row h3 { margin: 0; color: #1d3550; font-size: 14px; }
-.data-row p { margin: 4px 0 0; color: #778596; font-size: 12px; }
-.row-icon { display: grid; width: 42px; height: 42px; flex: 0 0 auto; place-items: center; border-radius: 8px; background: #e9f2fb; color: #276a9e; font-size: 21px; }
+.data-row h2, .data-row h3 { margin: 0; color: var(--planner-text, #1d3550); font-size: 14px; }
+.data-row p { margin: 4px 0 0; color: var(--planner-muted, #778596); font-size: 12px; }
+.row-icon { display: grid; width: 42px; height: 42px; flex: 0 0 auto; place-items: center; border-radius: 8px; background: var(--planner-soft, #e9f2fb); color: var(--planner-accent, #276a9e); font-size: 21px; }
 .row-main { min-width: 0; flex: 1; }
 .row-end { display: flex; align-items: center; gap: 8px; }
-.segment-control { display: flex; gap: 18px; border-bottom: 1px solid #dce3ea; }
-.segment-control button { padding: 12px 4px; border: 0; border-bottom: 2px solid transparent; background: transparent; color: #6e7b89; font: inherit; font-size: 12px; cursor: pointer; }
-.segment-control button.active { border-color: #15558a; color: #174f86; font-weight: 700; }
+.segment-control { display: flex; gap: 18px; border-bottom: 1px solid var(--planner-border, #dce3ea); }
+.segment-control button { padding: 12px 4px; border: 0; border-bottom: 2px solid transparent; background: transparent; color: var(--planner-muted, #6e7b89); font: inherit; font-size: 12px; cursor: pointer; }
+.segment-control button.active { border-color: #15558a; color: var(--planner-accent, #174f86); font-weight: 700; }
 .form-card { display: grid; gap: 12px; padding: 16px; margin-bottom: 16px; }
-.form-card h2 { margin: 0; color: #173b60; font-size: 17px; }
+.form-card h2 { margin: 0; color: var(--planner-text, #173b60); font-size: 17px; }
 .form-fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: 12px; }
-.form-fields ion-input, .form-fields ion-select, .form-fields ion-textarea { --background: #f7f9fb; --border-color: #dce3ea; --border-radius: 6px; --border-style: solid; --border-width: 1px; --highlight-color-focused: #15558a; --color: #173b60; --placeholder-color: #7a8b9c; color: #173b60; }
-.form-fields ion-input::part(native), .form-fields ion-select::part(text), .form-fields ion-textarea::part(native) { color: #173b60; }
-.badge { display: inline-flex; align-items: center; padding: 4px 8px; border-radius: 20px; background: #e8f3ef; color: #26745f; font-size: 10px; font-weight: 700; }
-.empty-state { padding: 34px 18px; color: #68788a; text-align: center; }
-.empty-state ion-icon { color: #4783ad; font-size: 32px; }
-.empty-state h2 { margin: 8px 0 5px; color: #203b56; font-size: 16px; }
+.form-fields ion-input, .form-fields ion-select, .form-fields ion-textarea { --background: var(--planner-soft, #f7f9fb); --border-color: var(--planner-border, #dce3ea); --border-radius: 6px; --border-style: solid; --border-width: 1px; --highlight-color-focused: #15558a; --color: var(--planner-text, #173b60); --placeholder-color: var(--planner-muted, #7a8b9c); color: var(--planner-text, #173b60); }
+.form-fields ion-input::part(native), .form-fields ion-select::part(text), .form-fields ion-textarea::part(native) { color: var(--planner-text, #173b60); }
+.badge { display: inline-flex; align-items: center; padding: 4px 8px; border-radius: 20px; background: var(--planner-soft, #e8f3ef); color: var(--planner-success, #26745f); font-size: 10px; font-weight: 700; }
+.empty-state { padding: 34px 18px; color: var(--planner-muted, #68788a); text-align: center; }
+.empty-state ion-icon { color: var(--planner-accent, #4783ad); font-size: 32px; }
+.empty-state h2 { margin: 8px 0 5px; color: var(--planner-text, #203b56); font-size: 16px; }
 .empty-state p { margin: 0; font-size: 12px; }
 @media (min-width: 700px) { .planner-shell { padding: 30px 24px 44px; } .planner-topbar { padding-inline: max(24px, calc((100% - 980px) / 2)); } }

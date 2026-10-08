@@ -1,7 +1,7 @@
 .checklist-progress { padding: 15px; margin-bottom: 12px; }
-.progress-heading { display: flex; align-items: center; justify-content: space-between; color: #708092; font-size: 11px; }
-.progress-heading strong { color: #28445e; font-size: 15px; }
-.progress-heading ion-icon { color: #398d78; font-size: 22px; }
+.progress-heading { display: flex; align-items: center; justify-content: space-between; color: var(--planner-muted, #708092); font-size: 11px; }
+.progress-heading strong { color: var(--planner-text, #28445e); font-size: 15px; }
+.progress-heading ion-icon { color: var(--planner-success, #398d78); font-size: 22px; }
 .checklist-progress .budget-track { margin-top: 11px; }
 .checklist-progress .budget-track span { background: #38987e; }
 .add-task { display: flex; align-items: center; gap: 9px; padding: 8px; }
@@ -12,6 +12,6 @@
 .task-row { display: flex; align-items: center; gap: 12px; padding: 12px; }
 .task-row ion-checkbox { --size: 19px; --checkbox-background-checked: #287b68; --border-color-checked: #287b68; }
 .task-copy { display: grid; min-width: 0; flex: 1; gap: 4px; }
-.task-copy strong { color: #30485f; font-size: 12px; }
-.task-copy span { color: #8591a0; font-size: 10px; }
-.task-copy.done strong { color: #8793a0; text-decoration: line-through; }
+.task-copy strong { color: var(--planner-text, #30485f); font-size: 12px; }
+.task-copy span { color: var(--planner-muted, #8591a0); font-size: 10px; }
+.task-copy.done strong { color: var(--planner-muted, #8793a0); text-decoration: line-through; }

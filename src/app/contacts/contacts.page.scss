@@ -1,8 +1,8 @@
 .contact-list { display: grid; gap: 9px; }
 .contact-row { display: flex; align-items: flex-start; gap: 12px; padding: 13px; }
-.contact-avatar { display: grid; width: 40px; height: 40px; flex: 0 0 auto; place-items: center; border-radius: 50%; background: #e6eff6; color: #356f97; font-size: 20px; }
+.contact-avatar { display: grid; width: 40px; height: 40px; flex: 0 0 auto; place-items: center; border-radius: 50%; background: var(--planner-soft, #e6eff6); color: var(--planner-accent, #356f97); font-size: 20px; }
 .contact-details { display: grid; min-width: 0; flex: 1; gap: 5px; }
-.contact-details h2 { margin: 0; color: #233e59; font-size: 13px; }
-.contact-details p { margin: 0; color: #748394; font-size: 10px; }
-.contact-details a { display: inline-flex; align-items: center; gap: 5px; color: #376d92; font-size: 11px; text-decoration: none; }
-.contact-empty { color: #9aa4ae; font-size: 10px; }
+.contact-details h2 { margin: 0; color: var(--planner-text, #233e59); font-size: 13px; }
+.contact-details p { margin: 0; color: var(--planner-muted, #748394); font-size: 10px; }
+.contact-details a { display: inline-flex; align-items: center; gap: 5px; color: var(--planner-accent, #376d92); font-size: 11px; text-decoration: none; }
+.contact-empty { color: var(--planner-muted, #9aa4ae); font-size: 10px; }

@@ -1,8 +1,8 @@
 .trip-plan { display: flex; align-items: center; gap: 8px; padding: 8px 10px 8px 14px; }
-.trip-main { display: flex; min-width: 0; flex: 1; align-items: center; gap: 13px; padding: 8px 0; border: 0; background: transparent; color: #203b56; text-align: left; }
-.trip-copy { display: grid; min-width: 0; flex: 1; gap: 5px; color: #203b56; }
-.trip-copy strong { overflow: hidden; color: #203b56; font-size: 15px; text-overflow: ellipsis; white-space: nowrap; }
-.trip-copy > span { color: #4d5c6e; }
-.trip-copy > span:last-of-type { display: flex; align-items: center; gap: 4px; color: #768596; font-size: 11px; }
-.trip-arrow { color: #7b8997; }
-.trip-delete { color: #9a5960; }
+.trip-main { display: flex; min-width: 0; flex: 1; align-items: center; gap: 13px; padding: 8px 0; border: 0; background: transparent; color: var(--planner-text, #203b56); text-align: left; }
+.trip-copy { display: grid; min-width: 0; flex: 1; gap: 5px; color: var(--planner-text, #203b56); }
+.trip-copy strong { overflow: hidden; color: var(--planner-text, #203b56); font-size: 15px; text-overflow: ellipsis; white-space: nowrap; }
+.trip-copy > span { color: var(--planner-muted, #4d5c6e); }
+.trip-copy > span:last-of-type { display: flex; align-items: center; gap: 4px; color: var(--planner-muted, #768596); font-size: 11px; }
+.trip-arrow { color: var(--planner-muted, #7b8997); }
+.trip-delete { color: var(--planner-danger, #9a5960); }

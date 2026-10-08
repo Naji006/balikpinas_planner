@@ -5,6 +5,8 @@ import { PlannerStoreService } from '../planner-store.service';
 import { TripDetailsPage } from './trip-details.page';
 
 const store = {
+  setSelectedTrip: vi.fn(),
+  getSelectedTrip: vi.fn(() => null),
   load: vi.fn((_key: string, fallback: unknown) => Promise.resolve(fallback))
 };
 
